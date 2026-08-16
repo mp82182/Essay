@@ -52,8 +52,8 @@ footer a{text-decoration:none;color:#f4f4f4}
     <h1>Not sure which review fits?</h1>
     <p class="lead">Send a quick note about the essay stage, deadline, and goal. This is the easiest way to confirm the right next step before paying.</p>
     <div class="contact-card">
-      <h2>Email</h2>
-      <p><a href="mailto:sejapatel1@gmail.com">sejapatel1@gmail.com</a></p>
+      <h2>Private message form</h2>
+      <p>Use the form to send a question directly to the College Essay Incubator inbox. The public site does not display a personal email address.</p>
     </div>
     <div class="contact-card">
       <h2>Best for</h2>
@@ -69,18 +69,18 @@ footer a{text-decoration:none;color:#f4f4f4}
     </div>
   </section>
   <section class="panel right">
-    <form onsubmit="sendContact(event)">
+    <form id="contactForm">
       <div class="field">
         <label for="name">Name</label>
-        <input id="name" autocomplete="name" required>
+        <input id="name" name="name" autocomplete="name" required>
       </div>
       <div class="field">
         <label for="email">Email</label>
-        <input id="email" type="email" autocomplete="email" required>
+        <input id="email" name="email" type="email" autocomplete="email" required>
       </div>
       <div class="field">
         <label for="topic">Topic</label>
-        <select id="topic">
+        <select id="topic" name="topic">
           <option>Choosing a review option</option>
           <option>Deadline question</option>
           <option>Submission issue</option>
@@ -90,11 +90,11 @@ footer a{text-decoration:none;color:#f4f4f4}
       </div>
       <div class="field">
         <label for="message">Message</label>
-        <textarea id="message" required placeholder="Example: My student has a Common App personal statement due Nov. 1. It is near-final, but we want an expert read on story, structure, and voice."></textarea>
+        <textarea id="message" name="message" required placeholder="Example: My student has a Common App personal statement due Nov. 1. It is near-final, but we want an expert read on story, structure, and voice."></textarea>
       </div>
       <button class="btn" type="submit">Send A Fit Question</button>
       <p id="status" class="status" role="status"></p>
-      <p class="note">This static page opens a pre-addressed email. A live contact form requires a form backend before launch.</p>
+      <p class="note">This form is ready for a secure form endpoint that forwards messages to Gmail. Add the endpoint before launch.</p>
     </form>
   </section>
 </main>
@@ -103,26 +103,42 @@ footer a{text-decoration:none;color:#f4f4f4}
   <span><a href="index.html">Home</a> &nbsp; <a href="faq.html">FAQ</a> &nbsp; <a href="privacy.html">Privacy</a> &nbsp; <a href="terms.html">Terms</a> &nbsp; <a href="trust.html">Trust</a></span>
 </footer>
 <script>
-function sendContact(event){
+const CONTACT_ENDPOINT = "";
+
+function showContactStatus(message){
+  const status=document.getElementById("status");
+  status.textContent=message;
+  status.style.display="block";
+}
+
+async function sendContact(event){
   event.preventDefault();
   const name=document.getElementById("name").value.trim();
   const email=document.getElementById("email").value.trim();
-  const topic=document.getElementById("topic").value;
   const message=document.getElementById("message").value.trim();
-  const status=document.getElementById("status");
   if(!name || !email || !message){
-    status.textContent="Please fill out your name, email, and message.";
-    status.style.display="block";
+    showContactStatus("Please fill out your name, email, and message.");
     return;
   }
-  const body=`Name: ${name}
-Email: ${email}
-Topic: ${topic}
-
-Message:
-${message}`;
-  location.href="mailto:sejapatel1@gmail.com?subject="+encodeURIComponent("College Essay Incubator - "+topic)+"&body="+encodeURIComponent(body);
+  if(!CONTACT_ENDPOINT){
+    showContactStatus("Contact form forwarding is designed but not live yet. Add a form endpoint that forwards to Gmail before publishing.");
+    return;
+  }
+  showContactStatus("Sending your message...");
+  try{
+    const form=document.getElementById("contactForm");
+    const response=await fetch(CONTACT_ENDPOINT,{method:"POST",body:new FormData(form),headers:{Accept:"application/json"}});
+    if(!response.ok){
+      throw new Error("Contact submission failed");
+    }
+    form.reset();
+    showContactStatus("Message sent. Thank you - we will follow up by email.");
+  }catch(error){
+    showContactStatus("The message could not be sent. Please try again later.");
+  }
 }
+
+document.getElementById("contactForm").addEventListener("submit", sendContact);
 </script>
 </body>
 </html>
