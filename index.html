@@ -32,9 +32,10 @@ a{color:inherit}
   top:0;
   z-index:10;
   display:flex;
+  flex-wrap:wrap;
   align-items:center;
   justify-content:space-between;
-  gap:24px;
+  gap:14px 24px;
   padding:16px clamp(20px,5vw,72px);
   background:rgba(255,250,241,.95);
   border-bottom:1px solid var(--line);
@@ -59,10 +60,16 @@ a{color:inherit}
 }
 .links{
   display:flex;
+  flex-wrap:wrap;
   align-items:center;
+  justify-content:flex-end;
   gap:22px;
 }
 .links a{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:40px;
   text-decoration:none;
   font-size:13px;
   font-weight:800;
@@ -483,7 +490,8 @@ input,select,textarea{
   border:1px solid rgba(255,255,255,.2);
   background:#fff;
   color:#111;
-  font:inherit;
+  font-size:16px;
+  font-family:inherit;
 }
 textarea{min-height:112px;resize:vertical}
 .flow-panel{
@@ -619,16 +627,58 @@ footer a{text-decoration:none;color:#f4f4f4}
   .split-section,.reviewer{grid-template-columns:1fr}
 }
 @media(max-width:760px){
-  .topbar{align-items:flex-start}
-  .links{display:none}
+  .topbar{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:10px;
+    padding:12px 14px 10px;
+  }
+  .brand{
+    width:100%;
+    min-width:0;
+    white-space:normal;
+    line-height:1.2;
+  }
+  .brand span:last-child{min-width:0}
+  .links{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:8px;
+    width:100%;
+  }
+  .links a{
+    min-height:42px;
+    padding:9px 8px;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.72);
+    font-size:12px;
+    line-height:1;
+    text-align:center;
+  }
+  .links .nav-cta{
+    border-color:var(--teal);
+    background:var(--teal);
+  }
   .hero{min-height:auto}
-  .hero-copy{padding:44px 22px}
+  .hero-photo{min-height:260px}
+  .hero-copy{padding:38px 20px}
+  h1{font-size:40px;line-height:1.02}
+  h2{font-size:30px;line-height:1.1}
+  .lead{font-size:17px;line-height:1.5}
+  .section{padding:44px 18px}
+  .hero-actions{display:grid;grid-template-columns:1fr;gap:10px}
+  .btn,.paybtn{width:100%;min-height:52px}
+  .trust-row{gap:8px}
+  .trust-pill{width:100%;font-size:12px}
   .proof-strip,.steps,.pricing-wrap,.grid,.pay-buttons,.faq,.value-grid,.idea-grid{grid-template-columns:1fr}
-  .proof{border-right:0;border-bottom:1px solid rgba(255,255,255,.16)}
+  .proof{min-height:auto;border-right:0;border-bottom:1px solid rgba(255,255,255,.16)}
   .proof:last-child{border-bottom:0}
+  .value-card,.idea-card,.step,.card,.secure,.flow-panel,.submit-stage,.faq-item{padding:22px}
   .field.full{grid-column:auto}
+  input,select,textarea{font-size:16px}
   .cta,footer{display:block}
   .cta .btn{margin-top:18px}
+  footer span{display:block;margin-top:10px;line-height:1.7}
 }
 </style>
 </head>
